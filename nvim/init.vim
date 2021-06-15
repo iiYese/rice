@@ -21,14 +21,19 @@ Plug 'scrooloose/nerdcommenter'
 "Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'kassio/neoterm'
 Plug 'Yggdroot/indentLine'
+Plug 'vim-airline/vim-airline'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'cocopon/iceberg.vim'
 Plug 'morhetz/gruvbox'
 Plug 'tomasr/molokai'
+Plug 'chriskempson/base16-vim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'liuchengxu/vim-which-key'
 Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
 " Initialize plugin system
 call plug#end()
+
+colorscheme iceberg
 
 inoremap jk <ESC>
 nmap <C-n> :NERDTreeToggle<CR>
@@ -70,8 +75,6 @@ set cindent
 set tabstop=2
 set shiftwidth=2
 " always uses spaces instead of tab characters
-
-colorscheme iceberg
 
 " sync open file with NERDTree
 " " Check if NERDTree is open or active
