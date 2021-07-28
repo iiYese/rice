@@ -47,8 +47,8 @@ require('packer').startup(function()
     use 'kyazdani42/nvim-web-devicons' 
      
     use 'lukas-reineke/indent-blankline.nvim'
-    
-    use 'kyazdani42/nvim-tree.lua' 
+    use 'kyazdani42/nvim-tree.lua'
+    use 'windwp/nvim-autopairs'
     
     use 'ziglang/zig.vim'
 end)
@@ -491,6 +491,11 @@ local opts = {
 require('rust-tools').setup(opts)
 
 -- Utility
+vim.cmd [[autocmd BufEnter * lua require'completion'.on_attach()]]
+vim.o.completeopt = 'menuone,noselect'
+
+require('nvim-autopairs').setup()
+
 vim.o.undodir = os.getenv('HOME') .. '/.config/nvim/undodir'
 vim.o.undofile = true
 vim.bo.undofile = true
