@@ -23,7 +23,8 @@ require('packer').startup(function()
     use 'morhetz/gruvbox'
     use 'jacoborus/tender.vim'
     use 'arcticicestudio/nord-vim'
-    
+    use 'NLKNguyen/papercolor-theme'
+
     use 'neovim/nvim-lspconfig'
     use 'nvim-treesitter/nvim-treesitter'
     use 'nvim-lua/completion-nvim'
@@ -52,7 +53,8 @@ require('packer').startup(function()
 end)
 
 -- Cosmetic
-vim.cmd [[colorscheme nord]]
+vim.g.background = dark
+vim.cmd [[colorscheme PaperColor]]
 vim.o.wrap = false
 vim.wo.wrap = false
 vim.o.mouse = 'a'
@@ -462,6 +464,7 @@ require('rust-tools').setup(opts)
 vim.o.undodir = os.getenv('HOME') .. '/.config/nvim/undodir'
 vim.o.undofile = true
 vim.bo.undofile = true
+vim.g.clipboard = unnamedplus
 
 -- Key mappings
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
