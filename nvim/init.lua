@@ -20,10 +20,11 @@ require('packer').startup(function()
     use 'wbthomason/packer.nvim'
     
     use 'ackyshake/Spacegray.vim'
-    use 'morhetz/gruvbox'
     use 'jacoborus/tender.vim'
     use 'arcticicestudio/nord-vim'
     use 'NLKNguyen/papercolor-theme'
+    use 'cocopon/iceberg.vim'
+    use 'wadackel/vim-dogrun'
 
     use 'neovim/nvim-lspconfig'
     use 'nvim-treesitter/nvim-treesitter'
@@ -53,8 +54,37 @@ require('packer').startup(function()
 end)
 
 -- Cosmetic
-vim.g.background = dark
-vim.cmd [[colorscheme PaperColor]]
+vim.cmd [[colorscheme dogrun]]
+
+vim.o.wrap = false
+vim.wo.wrap = false
+vim.o.mouse = 'a'
+vim.o.showmode = false
+vim.o.laststatus = 2
+vim.wo.number = true
+
+vim.o.shiftwidth = 4
+vim.o.tabstop = 4
+vim.o.expandtab = true
+vim.o.autoindent = true
+
+    -- indent-blankline
+    vim.g.indentLine_setColors = 0
+    vim.g.indent_blankline_use_treesitter = true
+    vim.g.indent_blankline_show_first_indent_level = false
+    vim.g.indent_blankline_show_trailing_blankline_indent = false
+    --vim.api.nvim_set_hl(ns, 'IndentBlanklineSpaceCharBlankline', {guifg='#00FF00', gui='nocombine'})
+
+vim.api.nvim_exec(
+    [[
+    augroup Terminal
+        autocmd!
+        au TermOpen * set nonu
+    augroup end
+    ]],
+    false
+)
+
 vim.o.wrap = false
 vim.wo.wrap = false
 vim.o.mouse = 'a'
@@ -464,7 +494,7 @@ require('rust-tools').setup(opts)
 vim.o.undodir = os.getenv('HOME') .. '/.config/nvim/undodir'
 vim.o.undofile = true
 vim.bo.undofile = true
-vim.g.clipboard = unnamedplus
+vim.opt.clipboard = "unnamedplus"
 
 -- Key mappings
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
