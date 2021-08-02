@@ -25,6 +25,11 @@ require('packer').startup(function()
     use 'NLKNguyen/papercolor-theme'
     use 'cocopon/iceberg.vim'
     use 'wadackel/vim-dogrun'
+    use 'Neur1n/neucs.vim'
+    use 'folke/tokyonight.nvim'
+    use 'savq/melange'
+    use 'elvessousa/sobrio'
+    use 'aswathkk/DarkScene.vim'
 
     use 'neovim/nvim-lspconfig'
     use 'nvim-treesitter/nvim-treesitter'
@@ -54,7 +59,7 @@ require('packer').startup(function()
 end)
 
 -- Cosmetic
-vim.cmd [[colorscheme dogrun]]
+vim.cmd [[colorscheme darkscene]]
 
 vim.o.wrap = false
 vim.wo.wrap = false
