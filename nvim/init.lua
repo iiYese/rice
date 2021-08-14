@@ -666,6 +666,9 @@ vim.g.maplocalleader = ' '
 
 vim.api.nvim_set_keymap('t', '<Esc>', [[<c-\><c-n>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>t', [[:below new term://zsh<CR>:resize 10<CR>]], { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>q', [[:q<CR>]], { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>l', [[:vs<CR>]], { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>k', [[:sp<CR>]], { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<leader>e', [[:NvimTreeToggle<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {noremap = true})
@@ -673,12 +676,10 @@ vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', {noremap = true})
 
-
 vim.api.nvim_set_keymap('n', '<C-Up>', ':resize -1<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-Down>', ':resize +1<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-Left>', ':vertical resize -1<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-Right>', ':vertical resize +1<CR>', {noremap = true})
-
 
 vim.api.nvim_set_keymap('v', '<', '<gv', {noremap = true})
 vim.api.nvim_set_keymap('v', '>', '>gv', {noremap = true})
