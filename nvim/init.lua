@@ -180,6 +180,7 @@ require('packer').startup(function()
 
 
     use 'neovim/nvim-lspconfig'
+    use 'glepnir/lspsaga.nvim'
     use 'nvim-treesitter/nvim-treesitter'
     use 'nvim-lua/completion-nvim'
     use 'RishabhRD/popfix'
@@ -300,6 +301,39 @@ vim.g.termguicolors = true
         "   (Operator)",
         "   (TypeParameter)",
     }
+    
+    local saga = require 'lspsaga'
+    saga.init_lsp_saga {
+        use_saga_diagnostic_sign = true,
+        error_sign = '',
+        warn_sign = '',
+        hint_sign = '',
+        infor_sign = '',
+        dianostic_header_icon = '   ',
+        code_action_icon = ' ',
+        code_action_prompt = {
+          enable = false,
+          sign = true,
+          sign_priority = 20,
+          virtual_text = true,
+        },
+        finder_definition_icon = '  ',
+        finder_reference_icon = '  ',
+        max_preview_lines = 10, 
+        finder_action_keys = {
+          open = 'o', vsplit = 's',split = 'i',quit = 'q',scroll_down = '<C-f>', scroll_up = '<C-b>' 
+        },
+        code_action_keys = {
+          quit = 'q',exec = '<CR>'
+        },
+        rename_action_keys = {
+          quit = '<C-c>',exec = '<CR>'
+        },
+        definition_preview_icon = '  ',
+        border_style = "single",
+        rename_prompt_prefix = '➤',
+        server_filetype_map = { rust={'rs'} }
+    }
 
     vim.fn.sign_define(
         "LspDiagnosticsSignError",
@@ -318,7 +352,7 @@ vim.g.termguicolors = true
         { texthl = "LspDiagnosticsSignInformation", text = "", numhl = "LspDiagnosticsSignInformation" }
     )
     vim.o.updatetime = 200
-    vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.lsp.diagnostic.show_line_diagnostics({focusable=false})]]
+    vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'lspsaga.diagnostic'.show_cursor_diagnostics()]]
     vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
         virtual_text = false,
     })
@@ -683,3 +717,5 @@ vim.api.nvim_set_keymap('n', '<C-Right>', ':vertical resize +1<CR>', {noremap = 
 
 vim.api.nvim_set_keymap('v', '<', '<gv', {noremap = true})
 vim.api.nvim_set_keymap('v', '>', '>gv', {noremap = true})
+
+vim.api.nvim_set_keymap('n', '<leader>i', [[:Lspsaga preview_definition<CR>]], {noremap = true, silent = true})
