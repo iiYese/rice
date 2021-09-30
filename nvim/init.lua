@@ -188,7 +188,7 @@ require('packer').startup(function()
     use 'folke/lsp-colors.nvim'
 
     use 'simrat39/rust-tools.nvim'
-    use 'cespare/vim-toml'
+    use {'cespare/vim-toml', branch = 'main'}
     use 'nvim-lua/popup.nvim'
     use 'nvim-lua/plenary.nvim'
     use 'nvim-telescope/telescope.nvim'
@@ -680,6 +680,7 @@ local opts = {
     } -- rust-analyer options
 }
 
+require('nvim-tree').setup()
 require('rust-tools').setup(opts)
 
 -- Utility
@@ -705,6 +706,7 @@ vim.api.nvim_set_keymap('n', '<leader>l', [[:vs<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>k', [[:sp<CR>]], { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<leader>e', [[:NvimTreeToggle<CR>]], { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>r', [[:NvimTreeRefresh<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', {noremap = true})
