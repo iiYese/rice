@@ -199,9 +199,9 @@ require('packer').startup(function()
 end)
 
 -- Cosmetic
-vim.cmd('colorscheme base16-chalk')
+vim.cmd('colorscheme spacegray')
 vim.cmd [[autocmd FileType python,lua colorscheme PaperColor]]
---vim.cmd [[autocmd FileType rust colorscheme base16-chalk]]
+vim.cmd [[autocmd FileType rust colorscheme base16-chalk]]
 
 vim.o.wrap = false
 vim.wo.wrap = false
