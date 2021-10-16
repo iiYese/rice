@@ -199,9 +199,9 @@ require('packer').startup(function()
 end)
 
 -- Cosmetic
-vim.cmd('colorscheme spacegray')
+vim.cmd('colorscheme base16-chalk')
 vim.cmd [[autocmd FileType python,lua colorscheme PaperColor]]
-vim.cmd [[autocmd FileType rust base16-chalk]]
+--vim.cmd [[autocmd FileType rust colorscheme base16-chalk]]
 
 vim.o.wrap = false
 vim.wo.wrap = false
@@ -271,12 +271,12 @@ vim.g.termguicolors = true
       ignore_install = { "javascript" }, -- List of parsers to ignore installing
       highlight = {
         enable = true,              -- false will disable the whole extension
-        disable = {},  -- list of language that will be disabled
+        disable = {"rust"},  -- list of language that will be disabled
         -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
         -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
         -- Using this option may slow down your editor, and you may see some duplicate highlights.
         -- Instead of true it can also be a list of languages
-        additional_vim_regex_highlighting = false,
+        additional_vim_regex_highlighting = true,
       },
     }
 
