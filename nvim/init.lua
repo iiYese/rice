@@ -1,7 +1,7 @@
 -- User todos:
 -- 1. install rust analyzer
 -- 2. install nerd font
-
+-- 3. install pyright
 
 
 -- Packer
@@ -21,11 +21,12 @@ require('packer').startup(function()
     
     use 'ackyshake/Spacegray.vim'
     use 'jacoborus/tender.vim'
+    use 'nanotech/jellybeans.vim'
     use 'arcticicestudio/nord-vim'
+    use 'aonemd/kuroi.vim'
     use 'NLKNguyen/papercolor-theme'
     use 'cocopon/iceberg.vim'
     use 'morhetz/gruvbox'
-    use 'fenetikm/falcon'
     use 'RRethy/nvim-base16'
     --[[ Based 16 presets
         base16-3024
@@ -199,9 +200,7 @@ require('packer').startup(function()
 end)
 
 -- Cosmetic
-vim.cmd('colorscheme spacegray')
-vim.cmd [[autocmd FileType python,lua colorscheme PaperColor]]
-vim.cmd [[autocmd FileType rust colorscheme base16-chalk]]
+vim.cmd('colorscheme base16-chalk')
 
 vim.o.wrap = false
 vim.wo.wrap = false
@@ -270,13 +269,13 @@ vim.g.termguicolors = true
       ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
       ignore_install = { "javascript" }, -- List of parsers to ignore installing
       highlight = {
-        enable = true,              -- false will disable the whole extension
+        enable = false,              -- false will disable the whole extension
         disable = {"rust"},  -- list of language that will be disabled
         -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
         -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
         -- Using this option may slow down your editor, and you may see some duplicate highlights.
         -- Instead of true it can also be a list of languages
-        additional_vim_regex_highlighting = true,
+        additional_vim_regex_highlighting = false,
       },
     }
 
@@ -365,14 +364,11 @@ vim.g.termguicolors = true
 
     -- sputlis
     require("lsp-colors").setup({
-        Error = "#ec5f67",
-        Warning = "#FF8800",
-        Information = "#008080",
-        Hint = "#98be65"
-    }) 
-
-
-
+        Error = "#db4b4b",
+        Warning = "#e0af68",
+        Information = "#0db9d7",
+        Hint = "#10B981"
+    })
     -- yoinked evil lualine
     local lualine = require 'lualine'
 
