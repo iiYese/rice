@@ -2,7 +2,7 @@
 -- 1. install rust analyzer
 -- 2. install nerd font
 -- 3. install pyright
-
+-- 4. install ctags
 
 -- Packer
 local execute = vim.api.nvim_command
@@ -172,9 +172,10 @@ require('packer').startup(function()
     --]]
 
     use 'neovim/nvim-lspconfig'
+    use {'ms-jpq/coq_nvim', branch = 'coq'}
+    use {'ms-jpq/coq.artifacts', branch = 'artifacts'}
     use 'glepnir/lspsaga.nvim'
     use 'nvim-treesitter/nvim-treesitter'
-    use 'nvim-lua/completion-nvim'
     use 'RishabhRD/popfix'
     use 'RishabhRD/nvim-lsputils'
     use 'folke/lsp-colors.nvim'
@@ -263,7 +264,13 @@ vim.api.nvim_exec(
 vim.g.termguicolors = true
 
     -- lsp 
-    require'lspconfig'.pyright.setup{}
+    vim.g.coq_settings = {
+        ["auto_start"] = "shut-up",
+        ["xdg"] = true,
+        ["keymap.pre_select"] = true
+    }
+    local coq = require "coq"
+    require'lspconfig'.pyright.setup(coq.lsp_ensure_capabilities())
 
     require'nvim-treesitter.configs'.setup {
       ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
@@ -686,7 +693,6 @@ require('nvim-tree').setup()
 require('rust-tools').setup(opts)
 
 -- Utility
-vim.cmd [[autocmd BufEnter * lua require'completion'.on_attach()]]
 vim.o.completeopt = 'menuone,noselect'
 
 require('nvim-autopairs').setup()
