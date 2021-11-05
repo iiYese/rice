@@ -170,11 +170,11 @@ require('packer').startup(function()
             base0C = '#56b6c2', base0D = '#0184bc', base0E = '#c678dd', base0F = '#a06949',
         })
     --]]
+    use 'github/copilot.vim'
 
     use 'neovim/nvim-lspconfig'
     use {'ms-jpq/coq_nvim', branch = 'coq'}
     use {'ms-jpq/coq.artifacts', branch = 'artifacts'}
-    use 'glepnir/lspsaga.nvim'
     use 'nvim-treesitter/nvim-treesitter'
     use 'RishabhRD/popfix'
     use 'RishabhRD/nvim-lsputils'
@@ -270,10 +270,12 @@ vim.g.termguicolors = true
         ["keymap.pre_select"] = true
     }
     local coq = require "coq"
-    require'lspconfig'.pyright.setup(coq.lsp_ensure_capabilities())
+    local lsp = require'lspconfig';
+    lsp.pyright.setup(coq.lsp_ensure_capabilities())
+    lsp.clangd.setup(coq.lsp_ensure_capabilities())
 
     require'nvim-treesitter.configs'.setup {
-      ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+      ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
       ignore_install = { "javascript" }, -- List of parsers to ignore installing
       highlight = {
         enable = false,              -- false will disable the whole extension
@@ -314,39 +316,6 @@ vim.g.termguicolors = true
         "   (TypeParameter)",
     } 
     
-    local saga = require 'lspsaga'
-    saga.init_lsp_saga {
-        use_saga_diagnostic_sign = true,
-        error_sign = '',
-        warn_sign = '',
-        hint_sign = '',
-        infor_sign = '',
-        dianostic_header_icon = '   ',
-        code_action_icon = ' ',
-        code_action_prompt = {
-          enable = false,
-          sign = true,
-          sign_priority = 20,
-          virtual_text = true,
-        },
-        finder_definition_icon = '  ',
-        finder_reference_icon = '  ',
-        max_preview_lines = 10, 
-        finder_action_keys = {
-          open = 'o', vsplit = 's',split = 'i',quit = 'q',scroll_down = '<C-f>', scroll_up = '<C-b>' 
-        },
-        code_action_keys = {
-          quit = 'q',exec = '<CR>'
-        },
-        rename_action_keys = {
-          quit = '<C-c>',exec = '<CR>'
-        },
-        definition_preview_icon = '  ',
-        border_style = "single",
-        rename_prompt_prefix = '➤',
-        server_filetype_map = { rust={'rs'} }
-    }
-
     vim.fn.sign_define(
         "LspDiagnosticsSignError",
         { texthl = "LspDiagnosticsSignError", text = "", numhl = "LspDiagnosticsSignError" }
@@ -364,11 +333,10 @@ vim.g.termguicolors = true
         { texthl = "LspDiagnosticsSignInformation", text = "", numhl = "LspDiagnosticsSignInformation" }
     )
     vim.o.updatetime = 200
-    vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'lspsaga.diagnostic'.show_cursor_diagnostics()]]
+    vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.lsp.diagnostic.show_line_diagnostics({focusable=false})]]
     vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
         virtual_text = false,
     })
-
     -- sputlis
     require("lsp-colors").setup({
         Error = "#db4b4b",
@@ -706,6 +674,7 @@ vim.opt.clipboard = "unnamedplus"
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
+vim.g.copilot_no_tab_map = true
 
 vim.api.nvim_set_keymap('t', '<Esc>', [[<c-\><c-n>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>t', [[:below new term://zsh<CR>:resize 10<CR>]], { noremap = true })
@@ -715,6 +684,9 @@ vim.api.nvim_set_keymap('n', '<leader>k', [[:sp<CR>]], { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<leader>e', [[:NvimTreeToggle<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>r', [[:NvimTreeRefresh<CR>]], { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>c', [[:Copilot enable<CR>]], { noremap = true })
+vim.api.nvim_set_keymap('i', '<C-j>', [[copilot#Accept("\<CR>")]], { silent = true, expr = true, script = true })
+
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', {noremap = true})
@@ -728,4 +700,3 @@ vim.api.nvim_set_keymap('n', '<C-Right>', ':vertical resize +1<CR>', {noremap = 
 vim.api.nvim_set_keymap('v', '<', '<gv', {noremap = true})
 vim.api.nvim_set_keymap('v', '>', '>gv', {noremap = true})
 
-vim.api.nvim_set_keymap('n', '<leader>i', [[:Lspsaga preview_definition<CR>]], {noremap = true, silent = true})
