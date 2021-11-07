@@ -214,6 +214,7 @@ vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.expandtab = true
 vim.o.autoindent = true
+vim.o.cursorline = true
 
     -- indent-blankline
     vim.g.indentLine_setColors = 0
@@ -279,12 +280,12 @@ vim.g.termguicolors = true
       ignore_install = { "javascript" }, -- List of parsers to ignore installing
       highlight = {
         enable = false,              -- false will disable the whole extension
-        disable = {"rust"},  -- list of language that will be disabled
+        disable = {},  -- list of language that will be disabled
         -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
         -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
         -- Using this option may slow down your editor, and you may see some duplicate highlights.
         -- Instead of true it can also be a list of languages
-        additional_vim_regex_highlighting = false,
+        additional_vim_regex_highlighting = true,
       },
     }
 
