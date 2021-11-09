@@ -274,6 +274,7 @@ vim.g.termguicolors = true
     local lsp = require'lspconfig';
     lsp.pyright.setup(coq.lsp_ensure_capabilities())
     lsp.clangd.setup(coq.lsp_ensure_capabilities())
+    lsp.hls.setup{}
 
     require'nvim-treesitter.configs'.setup {
       ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
