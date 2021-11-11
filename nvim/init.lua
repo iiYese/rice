@@ -3,6 +3,7 @@
 -- 2. install nerd font
 -- 3. install pyright
 -- 4. install ctags
+-- 5. install haskell lsp
 
 -- Packer
 local execute = vim.api.nvim_command
@@ -274,7 +275,7 @@ vim.g.termguicolors = true
     local lsp = require'lspconfig';
     lsp.pyright.setup(coq.lsp_ensure_capabilities())
     lsp.clangd.setup(coq.lsp_ensure_capabilities())
-    lsp.hls.setup{}
+    lsp.hls.setup(coq.lsp_ensure_capabilities())
 
     require'nvim-treesitter.configs'.setup {
       ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
@@ -672,6 +673,11 @@ vim.o.undofile = true
 vim.bo.undofile = true
 vim.opt.clipboard = "unnamedplus"
 
+-- Override fixes
+vim.g.coq_settings = {
+    ['keymap.jump_to_mark'] = '<C-F>'
+}
+
 -- Key mappings
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
 vim.g.mapleader = ' '
@@ -701,4 +707,5 @@ vim.api.nvim_set_keymap('n', '<C-Right>', ':vertical resize +1<CR>', {noremap = 
 
 vim.api.nvim_set_keymap('v', '<', '<gv', {noremap = true})
 vim.api.nvim_set_keymap('v', '>', '>gv', {noremap = true})
+
 
