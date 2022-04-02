@@ -6,8 +6,9 @@ return {
     exit_behavior = "Hold",
     color_scheme = "Chalkboard",
     scrollback_lines = 10000,
+    font_size = 11.8,
     font = wezterm.font({
-        family = "SauceCodePro Nerd Font Mono"
+        family = "SauceCodePro Nerd Font Mono",
     }),
     window_background_gradient = {
         orientation = {
