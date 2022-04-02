@@ -378,7 +378,7 @@ vim.g.termguicolors = true
     )
 
     vim.o.updatetime = 150
-    vim.cmd [[autocmd CursorHold, * lua vim.lsp.diagnostic.show_position_diagnostics({focusable=false})]]
+    vim.cmd [[autocmd CursorHold, * lua vim.diagnostic.open_float({focusable=false})]]
     vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
         virtual_text = false,
     })
@@ -531,7 +531,7 @@ vim.g.termguicolors = true
 
         ins_left {
           'diagnostics',
-          sources = {'nvim_lsp'},
+          sources = {'nvim_diagnostic'},
           symbols = {error = ' ', warn = ' ', info = ' '},
           color_error = colors.red,
           color_warn = colors.yellow,
