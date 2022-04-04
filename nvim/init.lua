@@ -223,6 +223,7 @@ vim.o.tabstop = 4
 vim.o.expandtab = true
 vim.o.autoindent = true
 vim.o.cursorline = true
+vim.o.colorcolumn = '100'
 
     -- indent-blankline
     vim.g.indentLine_setColors = 0
