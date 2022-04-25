@@ -172,23 +172,16 @@ require('packer').startup(function()
         })
     --]]
     use 'github/copilot.vim'
-    use 'hrsh7th/cmp-copilot'
     use 'kyazdani42/nvim-web-devicons' 
 
     use 'neovim/nvim-lspconfig'
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'hrsh7th/cmp-buffer'
-    use 'hrsh7th/cmp-path'
-    use 'hrsh7th/cmp-cmdline'
-    use 'hrsh7th/nvim-cmp'
-
-    use 'hrsh7th/cmp-vsnip'
-    use 'hrsh7th/vim-vsnip'
-
+    use 'ms-jpq/coq_nvim'
+    use {'ms-jpq/coq.artifacts', branch = 'artifacts'}
+    use {'ms-jpq/coq.thirdparty', branch = '3p'}
     use 'nvim-treesitter/nvim-treesitter'
     use 'RishabhRD/popfix'
     use 'RishabhRD/nvim-lsputils'
-    
+
     use 'simrat39/rust-tools.nvim'
     use {'cespare/vim-toml', branch = 'main'}
     use 'nvim-lua/popup.nvim'
@@ -256,62 +249,14 @@ vim.g.termguicolors = true
 
     -- lsp 
     local lsp = require'lspconfig';
-    local cmp = require'cmp'
-
-    cmp.setup({
-        snippet = {
-            -- REQUIRED - you must specify a snippet engine
-            expand = function(args)
-                vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-                -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-                -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
-                -- require'snippy'.expand_snippet(args.body) -- For `snippy` users.
-            end,
-        },
-        mapping = {
-            ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-            ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
-            ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-            ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
-            ['<C-e>'] = cmp.mapping({
-                i = cmp.mapping.abort(),
-                c = cmp.mapping.close(),
-            }),
-            ['<CR>'] = cmp.mapping.confirm({ select = true }),
-        },
-        sources = cmp.config.sources({
-            { name = 'nvim_lsp' },
-            { name = 'vsnip' }, -- For vsnip users.
-            -- { name = 'luasnip' }, -- For luasnip users.
-            -- { name = 'ultisnips' }, -- For ultisnips users.
-            -- { name = 'snippy' }, -- For snippy users.
-        }, {
-            { name = 'buffer' },
-        })
-    })
-
-      -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-    cmp.setup.cmdline('/', {
-        sources = {
-            { name = 'buffer' }
-        }
-    })
-
-      -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-    cmp.setup.cmdline(':', {
-        sources = cmp.config.sources(
-            {{ name = 'path' }}, 
-            {{ name = 'cmdline' }},
-            {{ name = 'cmdline' }},
-            {{ name = 'copilot' }}
-        )
-    })
+    vim.g.coq_settings = {
+        ['auto_start'] = 'shut-up',
+        ['keymap.pre_select'] = true
+    }
+    local coq = require "coq";
 
     -- Setup lspconfig.
-    local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-    require('lspconfig')['pyright'].setup {
-        capabilities = capabilities
-    }
+    lsp.pyright.setup(coq.lsp_ensure_capabilities())
     require('lspconfig')['clangd'].setup {
         capabilities = capabilities
     }
@@ -703,7 +648,7 @@ require('rust-tools').setup(opts)
 
 -- Utility
 vim.o.completeopt = 'menuone,noselect'
-
+vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
 require('nvim-autopairs').setup()
 
 vim.o.undodir = os.getenv('HOME') .. '/.config/nvim/undodir'
