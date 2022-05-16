@@ -181,12 +181,17 @@ require('packer').startup(function()
     use 'nvim-treesitter/nvim-treesitter'
     use 'RishabhRD/popfix'
     use 'RishabhRD/nvim-lsputils'
+    use {
+      "folke/trouble.nvim",
+      requires = "kyazdani42/nvim-web-devicons",
+    }
 
     use 'simrat39/rust-tools.nvim'
     use {'cespare/vim-toml', branch = 'main'}
     use 'nvim-lua/popup.nvim'
     use 'nvim-lua/plenary.nvim'
     use 'nvim-telescope/telescope.nvim'
+    use 'nvim-telescope/telescope-ui-select.nvim'
     use 'mfussenegger/nvim-dap'
 
     use {
@@ -263,6 +268,9 @@ vim.g.termguicolors = true
         capabilities = capabilities
     }
     require('lspconfig')['hls'].setup {
+        capabilities = capabilities
+    }
+    require('lspconfig')['rust_analyzer'].setup{
         capabilities = capabilities
     }
 
@@ -549,104 +557,269 @@ vim.g.termguicolors = true
 
         lualine.setup(config)
 
+-- telescope
+-- This is your opts table
+local telescope = require("telescope")
+telescope.setup {
+  extensions = {
+    ["ui-select"] = {
+      require("telescope.themes").get_dropdown {
+        -- even more opts
+      }
+
+      -- pseudo code / specification for writing custom displays, like the one
+      -- for "codeactions"
+      -- specific_opts = {
+      --   [kind] = {
+      --     make_indexed = function(items) -> indexed_items, width,
+      --     make_displayer = function(widths) -> displayer
+      --     make_display = function(displayer) -> function(e)
+      --     make_ordinal = function(e) -> string
+      --   },
+      --   -- for example to disable the custom builtin "codeactions" display
+      --      do the following
+      --   codeactions = false,
+      -- }
+    }
+  }
+}
+-- To get ui-select loaded and working with telescope, you need to call
+-- load_extension, somewhere after setup function:
+telescope.load_extension("ui-select")
+
 -- rust tools
 local opts = {
-    tools = { -- rust-tools options
-        -- automatically set inlay hints (type hints)
-        -- There is an issue due to which the hints are not applied on the first
-        -- opened file. For now, write to the file to trigger a reapplication of
-        -- the hints or just run :RustSetInlayHints.
-        -- default: true
-        autoSetHints = true,
+	tools = { -- rust-tools options
+		-- automatically set inlay hints (type hints)
+		-- There is an issue due to which the hints are not applied on the first
+		-- opened file. For now, write to the file to trigger a reapplication of
+		-- the hints or just run :RustSetInlayHints.
+		-- default: true
+		autoSetHints = true,
 
-        -- whether to show hover actions inside the hover window
-        -- this overrides the default hover handler so something like lspsaga.nvim's hover would be overriden by this
-        -- default: true
-        hover_with_actions = true,
+		-- whether to show hover actions inside the hover window
+		-- this overrides the default hover handler so something like lspsaga.nvim's hover would be overriden by this
+		-- default: true
+		hover_with_actions = true,
 
-        -- These apply to the default RustRunnables command
-        runnables = {
-            -- whether to use telescope for selection menu or not
-            -- default: true
-            use_telescope = true
+		-- how to execute terminal commands
+		-- options right now: termopen / quickfix
+		executor = require("rust-tools/executors").termopen,
 
-            -- rest of the opts are forwarded to telescope
-        },
+		-- callback to execute once rust-analyzer is done initializing the workspace
+		-- The callback receives one parameter indicating the `health` of the server: "ok" | "warning" | "error"
+		on_initialized = nil,
 
-        -- These apply to the default RustSetInlayHints command
-        inlay_hints = {
-            -- wheter to show parameter hints with the inlay hints or not
-            -- default: true
-            show_parameter_hints = true,
+		-- These apply to the default RustSetInlayHints command
+		inlay_hints = {
 
-            -- prefix for parameter hints
-            -- default: "<-"
-            parameter_hints_prefix = "<- ",
+			-- Only show inlay hints for the current line
+			only_current_line = false,
 
-            -- prefix for all the other hints (type, chaining)
-            -- default: "=>"
-            other_hints_prefix = "=> ",
+			-- Event which triggers a refersh of the inlay hints.
+			-- You can make this "CursorMoved" or "CursorMoved,CursorMovedI" but
+			-- not that this may cause higher CPU usage.
+			-- This option is only respected when only_current_line and
+			-- autoSetHints both are true.
+			only_current_line_autocmd = "CursorHold",
 
-            -- whether to align to the length of the longest line in the file
-            max_len_align = false,
+			-- whether to show parameter hints with the inlay hints or not
+			-- default: true
+			show_parameter_hints = true,
 
-            -- padding from the left if max_len_align is true
-            max_len_align_padding = 1,
+			-- whether to show variable name before type hints with the inlay hints or not
+			-- default: false
+			show_variable_name = false,
 
-            -- whether to align to the extreme right or not
-            right_align = false,
+			-- prefix for parameter hints
+			-- default: "<-"
+			parameter_hints_prefix = "<- ",
 
-            -- padding from the right if right_align is true
-            right_align_padding = 7
-        },
+			-- prefix for all the other hints (type, chaining)
+			-- default: "=>"
+			other_hints_prefix = "=> ",
 
-        hover_actions = {
-            -- the border that is used for the hover window
-            -- see vim.api.nvim_open_win()
-            border = {
-                {"╭", "FloatBorder"}, {"─", "FloatBorder"},
-                {"╮", "FloatBorder"}, {"│", "FloatBorder"},
-                {"╯", "FloatBorder"}, {"─", "FloatBorder"},
-                {"╰", "FloatBorder"}, {"│", "FloatBorder"}
-            },
+			-- whether to align to the lenght of the longest line in the file
+			max_len_align = false,
 
-            -- whether the hover action window gets automatically focused
-            -- default: false
-            auto_focus = false
-        }
-    },
+			-- padding from the left if max_len_align is true
+			max_len_align_padding = 1,
 
-    -- all the opts to send to nvim-lspconfig
-    -- these override the defaults set by rust-tools.nvim
-    -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
-    server = {
-        on_attach = on_attach,
-        settings = {
-            ["rust-analyzer"] = {
-                assist = {
-                    importMergeBehavior = "last",
-                    importPrefix = "by_self",
-                },
-                diagnostics = {
-                    disabled = { "unresolved-import" }
-                },
-                cargo = {
-                    loadOutDirsFromCheck = true
-                },
-                procMacro = {
-                    enable = true
-                },
-                checkOnSave = {
-                    command = "clippy"
-                },
-                capabilities = common_capabilities
-            }
-        }
-    } -- rust-analyer options
+			-- whether to align to the extreme right or not
+			right_align = false,
+
+			-- padding from the right if right_align is true
+			right_align_padding = 7,
+
+			-- The color of the hints
+			highlight = "Comment",
+		},
+
+		-- options same as lsp hover / vim.lsp.util.open_floating_preview()
+		hover_actions = {
+			-- the border that is used for the hover window
+			-- see vim.api.nvim_open_win()
+			border = {
+				{ "╭", "FloatBorder" },
+				{ "─", "FloatBorder" },
+				{ "╮", "FloatBorder" },
+				{ "│", "FloatBorder" },
+				{ "╯", "FloatBorder" },
+				{ "─", "FloatBorder" },
+				{ "╰", "FloatBorder" },
+				{ "│", "FloatBorder" },
+			},
+
+			-- whether the hover action window gets automatically focused
+			-- default: false
+			auto_focus = true,
+		},
+
+		-- settings for showing the crate graph based on graphviz and the dot
+		-- command
+		crate_graph = {
+			-- Backend used for displaying the graph
+			-- see: https://graphviz.org/docs/outputs/
+			-- default: x11
+			backend = "x11",
+			-- where to store the output, nil for no output stored (relative
+			-- path from pwd)
+			-- default: nil
+			output = nil,
+			-- true for all crates.io and external crates, false only the local
+			-- crates
+			-- default: true
+			full = true,
+
+			-- List of backends found on: https://graphviz.org/docs/outputs/
+			-- Is used for input validation and autocompletion
+			-- Last updated: 2021-08-26
+			enabled_graphviz_backends = {
+				"bmp",
+				"cgimage",
+				"canon",
+				"dot",
+				"gv",
+				"xdot",
+				"xdot1.2",
+				"xdot1.4",
+				"eps",
+				"exr",
+				"fig",
+				"gd",
+				"gd2",
+				"gif",
+				"gtk",
+				"ico",
+				"cmap",
+				"ismap",
+				"imap",
+				"cmapx",
+				"imap_np",
+				"cmapx_np",
+				"jpg",
+				"jpeg",
+				"jpe",
+				"jp2",
+				"json",
+				"json0",
+				"dot_json",
+				"xdot_json",
+				"pdf",
+				"pic",
+				"pct",
+				"pict",
+				"plain",
+				"plain-ext",
+				"png",
+				"pov",
+				"ps",
+				"ps2",
+				"psd",
+				"sgi",
+				"svg",
+				"svgz",
+				"tga",
+				"tiff",
+				"tif",
+				"tk",
+				"vml",
+				"vmlz",
+				"wbmp",
+				"webp",
+				"xlib",
+				"x11",
+			},
+		},
+	},
+
+	-- all the opts to send to nvim-lspconfig
+	-- these override the defaults set by rust-tools.nvim
+	-- see https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#rust_analyzer
+	server = {
+		-- standalone file support
+		-- setting it to false may improve startup time
+		standalone = true,
+	}, -- rust-analyer options
+
+	-- debugging stuff
+	dap = {
+		adapter = {
+			type = "executable",
+			command = "lldb-vscode",
+			name = "rt_lldb",
+		},
+	},
 }
 
-require('nvim-tree').setup()
+require("trouble").setup {
+    position = "left", -- position of the list can be: bottom, top, left, right
+    width = 100, -- width of the list when position is left or right
+    icons = true, -- use devicons for filenames
+    mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
+    fold_open = "", -- icon used for open folds
+    fold_closed = "", -- icon used for closed folds
+    group = true, -- group results by file
+    padding = true, -- add an extra new line on top of the list
+    action_keys = { -- key mappings for actions in the trouble list
+        -- map to {} to remove a mapping, for example:
+        -- close = {},
+        close = "q", -- close the list
+        cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
+        refresh = "r", -- manually refresh
+        jump = {"<cr>", "<tab>"}, -- jump to the diagnostic or open / close folds
+        open_split = { "<c-x>" }, -- open buffer in new split
+        open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
+        open_tab = { "<c-t>" }, -- open buffer in new tab
+        jump_close = {"o"}, -- jump to the diagnostic and close the list
+        toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
+        toggle_preview = "P", -- toggle auto_preview
+        hover = "K", -- opens a small popup with the full multiline message
+        preview = "p", -- preview the diagnostic location
+        close_folds = {"zM", "zm"}, -- close all folds
+        open_folds = {"zR", "zr"}, -- open all folds
+        toggle_fold = {"zA", "za"}, -- toggle fold of current file
+        previous = "k", -- preview item
+        next = "j" -- next item
+    },
+    indent_lines = true, -- add an indent guide below the fold icons
+    auto_open = true, -- automatically open the list when you have diagnostics
+    auto_close = false, -- automatically close the list when you have no diagnostics
+    auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+    auto_fold = false, -- automatically fold a file trouble list at creation
+    auto_jump = {"lsp_definitions"}, -- for the given modes, automatically jump if there is only a single result
+    signs = {
+        -- icons / text used for a diagnostic
+        error = "",
+        warning = "",
+        hint = "",
+        information = "",
+        other = "﫠"
+    }
+}
+
 require('rust-tools').setup(opts)
+require('nvim-tree').setup()
 
 -- Utility
 vim.o.completeopt = 'menuone,noselect'
@@ -693,4 +866,21 @@ vim.api.nvim_set_keymap('n', '<C-Right>', ':vertical resize +1<CR>', {noremap = 
 vim.api.nvim_set_keymap('v', '<', '<gv', {noremap = true})
 vim.api.nvim_set_keymap('v', '>', '>gv', {noremap = true})
 
-
+vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>Trouble<cr>",
+  {silent = true, noremap = true}
+)
+vim.api.nvim_set_keymap("n", "<leader>xw", "<cmd>Trouble workspace_diagnostics<cr>",
+  {silent = true, noremap = true}
+)
+vim.api.nvim_set_keymap("n", "<leader>xd", "<cmd>Trouble document_diagnostics<cr>",
+  {silent = true, noremap = true}
+)
+vim.api.nvim_set_keymap("n", "<leader>xl", "<cmd>Trouble loclist<cr>",
+  {silent = true, noremap = true}
+)
+vim.api.nvim_set_keymap("n", "<leader>xq", "<cmd>Trouble quickfix<cr>",
+  {silent = true, noremap = true}
+)
+vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<cr>",
+  {silent = true, noremap = true}
+)
