@@ -270,10 +270,26 @@ vim.g.termguicolors = true
     require('lspconfig')['hls'].setup {
         capabilities = capabilities
     }
-    require('lspconfig')['rust_analyzer'].setup{
-        capabilities = capabilities
-    }
-
+    lsp.rust_analyzer.setup(coq.lsp_ensure_capabilities({
+        on_attach=on_attach,
+        settings = {
+            ["rust-analyzer"] = {
+                assist = {
+                    importGranularity = "module",
+                    importPrefix = "self",
+                },
+                cargo = {
+                    loadOutDirsFromCheck = true
+                },
+                procMacro = {
+                    enable = true
+                },
+                checkOnSave = {
+                    command = "clippy"
+                }
+            }
+        }
+    }))
     require'nvim-treesitter.configs'.setup {
         ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         ignore_install = { "javascript" }, -- List of parsers to ignore installing
@@ -760,6 +776,16 @@ local opts = {
 		-- standalone file support
 		-- setting it to false may improve startup time
 		standalone = true,
+        settings = {
+            ["rust-analyzer"] = {
+                procMacro = {
+                    enable = true
+                },
+                checkOnSave = {
+                    command = "clippy"
+                },
+            }
+        }
 	}, -- rust-analyer options
 
 	-- debugging stuff
@@ -774,7 +800,7 @@ local opts = {
 
 require("trouble").setup {
     position = "right", -- position of the list can be: bottom, top, left, right
-    width = 80, -- width of the list when position is left or right
+    width = 135, -- width of the list when position is left or right
     icons = true, -- use devicons for filenames
     mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
     fold_open = "", -- icon used for open folds
