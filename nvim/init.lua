@@ -29,6 +29,8 @@ require('packer').startup(function()
     use 'cocopon/iceberg.vim'
     use 'morhetz/gruvbox'
     use 'RRethy/nvim-base16'
+    use "cpea2506/one_monokai.nvim"
+    use "rebelot/kanagawa.nvim"
     --[[ Based 16 presets
         base16-3024
         base16-apathy
@@ -171,8 +173,7 @@ require('packer').startup(function()
             base0C = '#56b6c2', base0D = '#0184bc', base0E = '#c678dd', base0F = '#a06949',
         })
     --]]
-    use 'github/copilot.vim'
-    use 'kyazdani42/nvim-web-devicons' 
+    use 'kyazdani42/nvim-web-devicons'
 
     use 'neovim/nvim-lspconfig'
     use 'ms-jpq/coq_nvim'
@@ -198,16 +199,46 @@ require('packer').startup(function()
         'hoob3rt/lualine.nvim',
         requires = { 'ryanoasis/vim-devicons', opt = true }
     }
-     
+
     use 'lukas-reineke/indent-blankline.nvim'
     use 'kyazdani42/nvim-tree.lua'
-    use 'windwp/nvim-autopairs' 
+    use 'windwp/nvim-autopairs'
 
     use 'ziglang/zig.vim'
 end)
 
+require'nvim-treesitter.configs'.setup {
+  -- A list of parser names, or "all"
+  ensure_installed = { "c", "lua", "rust" },
+
+  -- Install parsers synchronously (only applied to `ensure_installed`)
+  sync_install = false,
+
+  -- Automatically install missing parsers when entering buffer
+  auto_install = true,
+
+  -- List of parsers to ignore installing (for "all")
+  ignore_install = { "javascript" },
+
+  highlight = {
+    -- `false` will disable the whole extension
+    enable = true,
+
+    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+    -- the name of the parser)
+    -- list of language that will be disabled
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+
 -- Cosmetic
-vim.cmd('colorscheme base16-chalk')
+vim.cmd("colorscheme kanagawa")
 
 vim.o.wrap = false
 vim.wo.wrap = false
@@ -290,19 +321,6 @@ vim.g.termguicolors = true
             }
         }
     }))
-    require'nvim-treesitter.configs'.setup {
-        ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-        ignore_install = { "javascript" }, -- List of parsers to ignore installing
-        highlight = {
-            enable = false,              -- false will disable the whole extension
-            disable = {},  -- list of language that will be disabled
-            -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-            -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-            -- Using this option may slow down your editor, and you may see some duplicate highlights.
-            -- Instead of true it can also be a list of languages
-            additional_vim_regex_highlighting = true,
-        },
-    }
 
     vim.lsp.protocol.CompletionItemKind = {
         "   (Text) ",
@@ -630,7 +648,7 @@ local opts = {
 		inlay_hints = {
 
 			-- Only show inlay hints for the current line
-			only_current_line = false,
+			only_current_line = true,
 
 			-- Event which triggers a refersh of the inlay hints.
 			-- You can make this "CursorMoved" or "CursorMoved,CursorMovedI" but
@@ -866,7 +884,6 @@ vim.g.coq_settings = {
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-vim.g.copilot_no_tab_map = true
 
 vim.api.nvim_set_keymap('t', '<Esc>', [[<c-\><c-n>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>t', [[:below new term://zsh<CR>:resize 10<CR>]], { noremap = true })
@@ -876,8 +893,6 @@ vim.api.nvim_set_keymap('n', '<leader>k', [[:sp<CR>]], { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<leader>e', [[:NvimTreeToggle<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>r', [[:NvimTreeRefresh<CR>]], { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>c', [[:Copilot enable<CR>]], { noremap = true })
-vim.api.nvim_set_keymap('i', '<C-j>', [[copilot#Accept("\<CR>")]], { silent = true, expr = true, script = true })
 
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', {noremap = true})
