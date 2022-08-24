@@ -906,7 +906,7 @@ vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<cr>",
 )
 vim.keymap.set(
   "n",
-  "<Leader>l",
+  "<Leader>1",
   require("lsp_lines").toggle,
   { desc = "Toggle lsp_lines" }
 )
