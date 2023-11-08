@@ -19,8 +19,6 @@ end
 local use = require('packer').use
 require('packer').startup(function()
     use 'wbthomason/packer.nvim'
-    
-    use 'ackyshake/Spacegray.vim'
     use 'NLKNguyen/papercolor-theme'
     use 'morhetz/gruvbox'
     use 'RRethy/nvim-base16'
@@ -171,15 +169,18 @@ require('packer').startup(function()
     use { "catppuccin/nvim", as = "catppuccin" }
 
     use 'neovim/nvim-lspconfig'
-    use 'ms-jpq/coq_nvim'
-    use {'ms-jpq/coq.artifacts', branch = 'artifacts'}
-    use {'ms-jpq/coq.thirdparty', branch = '3p'}
     use 'nvim-treesitter/nvim-treesitter'
     use {
       "folke/trouble.nvim",
       requires = "kyazdani42/nvim-web-devicons",
     }
-    use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
+    -- autocompletion
+    use "hrsh7th/nvim-cmp"
+    use "hrsh7th/cmp-buffer"
+    use "hrsh7th/cmp-path"
+    use "L3MON4D3/LuaSnip"
+    use "saadparwaiz1/cmp_luasnip"
+    use "rafamadriz/friendly-snippets"
 
     use 'simrat39/rust-tools.nvim'
     use {'cespare/vim-toml', branch = 'main'}
@@ -249,12 +250,7 @@ vim.o.colorcolumn = '100'
 
 vim.opt.list = true
 
-require("indent_blankline").setup {
-    space_char_blankline = " ",
-    show_current_context = true,
-    show_current_context_start = true,
-    show_trailing_blankline_indent = false,
-}
+require("ibl").setup()
 
 vim.api.nvim_exec(
     [[
@@ -271,14 +267,9 @@ vim.g.termguicolors = true
     -- lsp 
     require("lsp_lines").setup();
     local lsp = require'lspconfig';
-    vim.g.coq_settings = {
-        ['auto_start'] = 'shut-up',
-        ['keymap.pre_select'] = true
-    }
-    local coq = require "coq";
+    require('nvim-cmp');
 
     -- Setup lspconfig.
-    lsp.pyright.setup(coq.lsp_ensure_capabilities())
     lsp.jdtls.setup{
         capabilities = capabilities
     }
@@ -846,15 +837,10 @@ vim.o.completeopt = 'menuone,noselect'
 vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 require('nvim-autopairs').setup()
 
-vim.o.undodir = os.getenv('HOME') .. '/.config/nvim/undodir'
+vim.o.undodir = 'C:/Users/Yogii/.config/nvim/undodir'
 vim.o.undofile = true
 vim.bo.undofile = true
 vim.opt.clipboard = "unnamedplus"
-
--- Override fixes
-vim.g.coq_settings = {
-    ['keymap.jump_to_mark'] = '<C-F>'
-}
 
 -- Key mappings
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
