@@ -182,6 +182,7 @@ require('packer').startup(function()
     use "saadparwaiz1/cmp_luasnip"
     use "rafamadriz/friendly-snippets"
 
+    use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
     use 'simrat39/rust-tools.nvim'
     use {'cespare/vim-toml', branch = 'main'}
     use({
@@ -837,7 +838,7 @@ vim.o.completeopt = 'menuone,noselect'
 vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 require('nvim-autopairs').setup()
 
-vim.o.undodir = 'C:/Users/Yogii/.config/nvim/undodir'
+vim.o.undodir = os.getenv('HOME') .. '/.config/nvim/undodir'
 vim.o.undofile = true
 vim.bo.undofile = true
 vim.opt.clipboard = "unnamedplus"
@@ -848,7 +849,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 vim.api.nvim_set_keymap('t', '<Esc>', [[<c-\><c-n>]], { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>t', [[:below new term://zsh<CR>:resize 10<CR>]], { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>t', [[:below new term://nu<CR>:resize 10<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>q', [[:q<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>l', [[:vs<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>k', [[:sp<CR>]], { noremap = true })
