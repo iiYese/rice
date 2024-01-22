@@ -242,6 +242,7 @@ vim.o.showmode = false
 vim.o.laststatus = 2
 vim.wo.number = true
 
+vim.o.scrolloff = 9999
 vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.expandtab = true
@@ -815,7 +816,7 @@ require("trouble").setup {
         next = "j" -- next item
     },
     indent_lines = true, -- add an indent guide below the fold icons
-    auto_open = true, -- automatically open the list when you have diagnostics
+    auto_open = false, -- automatically open the list when you have diagnostics
     auto_close = false, -- automatically close the list when you have no diagnostics
     auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
     auto_fold = false, -- automatically fold a file trouble list at creation
@@ -849,13 +850,14 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 vim.api.nvim_set_keymap('t', '<Esc>', [[<c-\><c-n>]], { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>t', [[:below new term://nu<CR>:resize 10<CR>]], { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>t', [[:below new term://zsh<CR>:resize 10<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>q', [[:q<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>l', [[:vs<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>k', [[:sp<CR>]], { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<leader>e', [[:NvimTreeToggle<CR>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>r', [[:NvimTreeRefresh<CR>]], { noremap = true })
+vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end)
 
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', {noremap = true})
