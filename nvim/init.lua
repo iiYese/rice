@@ -267,6 +267,13 @@ vim.api.nvim_exec(
 vim.g.termguicolors = true
 
     -- lsp 
+    vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+        pattern = "*.wgsl",
+        callback = function()
+            vim.bo.filetype = "wgsl"
+        end,
+    })
+
     require("lsp_lines").setup();
     local lsp = require'lspconfig';
     require('nvim-cmp');
@@ -279,6 +286,9 @@ vim.g.termguicolors = true
         capabilities = capabilities
     }
     lsp.hls.setup {
+        capabilities = capabilities
+    }
+    lsp.wgsl_analyzer.setup {
         capabilities = capabilities
     }
     lsp.rust_analyzer.setup({
