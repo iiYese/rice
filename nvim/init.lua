@@ -125,7 +125,7 @@ require("lazy").setup({
       version = '1.*',
       opts_extend = { "sources.default" },
       opts = {
-        keymap = { preset = 'default' },
+        keymap = { preset = 'default', ['<CR>'] = { 'accept', 'fallback' }, },
         appearance = { nerd_font_variant = 'mono' },
         completion = { documentation = { auto_show = false } },
         sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
