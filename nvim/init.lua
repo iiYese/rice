@@ -38,21 +38,54 @@ require("lazy").setup({
       },
     },
     -- Editor
-    { 'nvim-telescope/telescope.nvim', tag = '0.1.8', dependencies = { 'nvim-lua/plenary.nvim' } },
+    { 'mrcjkb/rustaceanvim', version = '^6', lazy = false, },
+    {
+      "folke/snacks.nvim",
+      priority = 1000,
+      lazy = false,
+      opts = {
+        bigfile = { enabled = true },
+        dashboard = {
+          enabled = true,
+          sections = {
+            { section = "header" },
+            { icon = " ", title = "Keymaps", section = "keys", indent = 2, padding = 1 },
+            { icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
+            { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+            { section = "startup" },
+          },
+        },
+        explorer = { enabled = true },
+        input = { enabled = true },
+        picker = { enabled = true },
+        notifier = { enabled = true },
+        quickfile = { enabled = true },
+        scope = { enabled = true },
+        statuscolumn = { enabled = true },
+      },
+      keys = {
+        { "<leader>e", desc = "File Explorer", function() Snacks.explorer() end, },
+        { "<leader>fg",
+          desc = "Grep",
+          function()
+            Snacks.picker.grep({ glob = { "*.rs", "*.toml", "*.md", "*.wgsl", "*.html" } })
+          end,
+        },
+      },
+    },
     { "nvim-treesitter/nvim-treesitter",
       branch = 'master',
       lazy = false,
       build = ":TSUpdate",
       config = function()
         require("nvim-treesitter.configs").setup({
-          ensure_installed = { "lua", "html", "rust" },
+          ensure_installed = { "lua", "html", "rust", "toml", "markdown" },
           sync_install = false,
           highlight = { enable = true },
           indent = { enable = true },  
         })
       end
     },
-    { 'mrcjkb/rustaceanvim', version = '^6', lazy = false, },
     {
       "rachartier/tiny-inline-diagnostic.nvim",
       event = "VeryLazy", -- Or `LspAttach`
@@ -99,17 +132,6 @@ require("lazy").setup({
       },
     },
     { 'akinsho/toggleterm.nvim', version = "*", opts = { size = 100, direction = 'float' } },
-    {
-      "nvim-neo-tree/neo-tree.nvim",
-      branch = "v3.x",
-      dependencies = {
-        "nvim-lua/plenary.nvim",
-        "nvim-tree/nvim-web-devicons",
-        "MunifTanjim/nui.nvim",
-      },
-      lazy = false,
-      opts = {},
-    },
   },
   change_detection = { enabled = true },
   install = { missing = true, colorscheme = { "catppuccin-macchiato" } },
@@ -152,9 +174,6 @@ vim.api.nvim_set_keymap('n', '<leader>q', [[<cmd>q<cr>]], { noremap = true })
 
 vim.api.nvim_set_keymap('t', '<esc>', [[<cmd>ToggleTerm<cr>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>t', [[<cmd>ToggleTerm<cr>]], { noremap = true })
-
-vim.api.nvim_set_keymap('n', '<leader>e', [[<cmd>Neotree<cr>]], { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>r', [[<cmd>Neotree<cr>]], { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<leader>l', [[<cmd>vs<cr>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>k', [[<cmd>sp<cr>]], { noremap = true })
