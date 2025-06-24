@@ -27,7 +27,6 @@ vim.g.maplocalleader = " "
 require("lazy").setup({
   spec = {
     -- Cosmetic
-    { "nvim-tree/nvim-web-devicons", opts = {} },
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     {
       "lukas-reineke/indent-blankline.nvim",
@@ -39,6 +38,7 @@ require("lazy").setup({
     },
     -- Editor
     { 'mrcjkb/rustaceanvim', version = '^6', lazy = false, },
+    { 'akinsho/toggleterm.nvim', version = "*", opts = { size = 100, direction = 'float' } },
     {
       "folke/snacks.nvim",
       priority = 1000,
@@ -131,7 +131,6 @@ require("lazy").setup({
         fuzzy = { implementation = "prefer_rust_with_warning" }
       },
     },
-    { 'akinsho/toggleterm.nvim', version = "*", opts = { size = 100, direction = 'float' } },
   },
   change_detection = { enabled = true },
   install = { missing = true, colorscheme = { "catppuccin-macchiato" } },
