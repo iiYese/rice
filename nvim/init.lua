@@ -26,6 +26,17 @@ vim.g.maplocalleader = " "
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
+    -- Cosmetic
+    { "nvim-tree/nvim-web-devicons", opts = {} },
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    {
+      "lukas-reineke/indent-blankline.nvim",
+      main = "ibl",
+      opts = {
+        scope = { enabled = true },
+        whitespace = { highlight = { "CursorColumn", "Whitespace" } },
+      },
+    },
     -- Editor
     { 'nvim-telescope/telescope.nvim', tag = '0.1.8', dependencies = { 'nvim-lua/plenary.nvim' } },
     { "nvim-treesitter/nvim-treesitter",
@@ -99,8 +110,6 @@ require("lazy").setup({
       lazy = false,
       opts = {},
     },
-    -- Cosmetic
-    { "catppuccin/nvim", name = "catppuccin", priority = 1000 }
   },
   change_detection = { enabled = true },
   install = { missing = true, colorscheme = { "catppuccin-macchiato" } },
