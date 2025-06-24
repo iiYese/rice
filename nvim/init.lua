@@ -27,6 +27,7 @@ vim.g.maplocalleader = " "
 require("lazy").setup({
   spec = {
     -- Cosmetic
+    { "nvim-tree/nvim-web-devicons", opts = {} },
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     {
       "lukas-reineke/indent-blankline.nvim",
