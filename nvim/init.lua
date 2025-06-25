@@ -29,14 +29,6 @@ require("lazy").setup({
     -- Cosmetic
     { "nvim-tree/nvim-web-devicons", opts = {} },
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
-    {
-      "lukas-reineke/indent-blankline.nvim",
-      main = "ibl",
-      opts = {
-        scope = { enabled = true },
-        whitespace = { highlight = { "CursorColumn", "Whitespace" } },
-      },
-    },
     -- Editor
     { 'mrcjkb/rustaceanvim', version = '^6', lazy = false, },
     { 'akinsho/toggleterm.nvim', version = "*", opts = { size = 100, direction = 'float' } },
@@ -45,6 +37,12 @@ require("lazy").setup({
       priority = 1000,
       lazy = false,
       opts = {
+        indent = {
+          enabled = true,
+          indent = { char = '︳' },
+          animate = { enabled = false },
+          scope = { enabled = true },
+        },
         bigfile = { enabled = true },
         dashboard = {
           enabled = true,
