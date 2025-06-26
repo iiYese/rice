@@ -30,6 +30,8 @@ require("lazy").setup({
     { "nvim-tree/nvim-web-devicons", opts = {} },
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     -- Editor
+    { 'echasnovski/mini.files', version = '*' },
+    { 'echasnovski/mini.statusline', version = '*' },
     { 'mrcjkb/rustaceanvim', version = '^6', lazy = false, },
     { 'akinsho/toggleterm.nvim', version = "*", opts = { size = 100, direction = 'float' } },
     {
@@ -54,16 +56,14 @@ require("lazy").setup({
             { section = "startup" },
           },
         },
-        explorer = { enabled = true },
+        -- explorer = { enabled = true },
         input = { enabled = true },
         picker = { enabled = true },
         notifier = { enabled = true },
         quickfile = { enabled = true },
         scope = { enabled = true },
-        statuscolumn = { enabled = true },
       },
       keys = {
-        { "<leader>e", desc = "File Explorer", function() Snacks.explorer() end, },
         { "<leader>fg",
           desc = "Grep",
           function()
@@ -141,6 +141,11 @@ require("lazy").setup({
 vim.cmd.colorscheme "catppuccin-mocha"
 
 -- Editor
+require('mini.statusline').setup({})
+require('mini.files').setup({
+  mappings = { go_in = "<right>", go_out = "<left>", synchronize = "<enter>" }
+})
+
 vim.o.wrap = false
 vim.wo.wrap = false
 vim.o.mouse = 'a'
@@ -172,19 +177,20 @@ vim.api.nvim_set_keymap('n', '<leader>q', [[<cmd>q<cr>]], { noremap = true })
 
 vim.api.nvim_set_keymap('t', '<esc>', [[<cmd>ToggleTerm<cr>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>t', [[<cmd>ToggleTerm<cr>]], { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>e', [[<cmd>lua MiniFiles.open()<cr>]], { noremap = true })
 
 vim.api.nvim_set_keymap('n', '<leader>l', [[<cmd>vs<cr>]], { noremap = true })
 vim.api.nvim_set_keymap('n', '<leader>k', [[<cmd>sp<cr>]], { noremap = true })
 
-vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', { noremap = true })
+vim.api.nvim_set_keymap('n', '<c-h>', '<c-w>h', { noremap = true })
+vim.api.nvim_set_keymap('n', '<c-j>', '<c-w>j', { noremap = true })
+vim.api.nvim_set_keymap('n', '<c-k>', '<c-w>k', { noremap = true })
+vim.api.nvim_set_keymap('n', '<c-l>', '<c-w>l', { noremap = true })
 
-vim.api.nvim_set_keymap('n', '<C-Up>', '<cmd>resize -1<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-Down>', '<cmd>resize +1<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-Left>', '<cmd>vertical resize -1<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<C-Right>', '<cmd>vertical resize +1<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<c-up>', '<cmd>resize -1<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<c-down>', '<cmd>resize +1<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<c-left>', '<cmd>vertical resize +1<cr>', { noremap = true })
+vim.api.nvim_set_keymap('n', '<c-right>', '<cmd>vertical resize -1<cr>', { noremap = true })
 
 vim.api.nvim_set_keymap('v', '<', '<gv', {noremap = true})
 vim.api.nvim_set_keymap('v', '>', '>gv', {noremap = true})
