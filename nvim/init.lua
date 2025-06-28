@@ -30,8 +30,8 @@ require("lazy").setup({
     { "nvim-tree/nvim-web-devicons", opts = {} },
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     -- Editor
+    { 'nvim-lualine/lualine.nvim' },
     { 'echasnovski/mini.files', version = '*' },
-    { 'echasnovski/mini.statusline', version = '*' },
     { 'mrcjkb/rustaceanvim', version = '^6', lazy = false, },
     { 'akinsho/toggleterm.nvim', version = "*", opts = { size = 100, direction = 'float' } },
     {
@@ -56,7 +56,6 @@ require("lazy").setup({
             { section = "startup" },
           },
         },
-        -- explorer = { enabled = true },
         input = { enabled = true },
         picker = { enabled = true },
         notifier = { enabled = true },
@@ -78,10 +77,10 @@ require("lazy").setup({
       build = ":TSUpdate",
       config = function()
         require("nvim-treesitter.configs").setup({
-          ensure_installed = { "lua", "html", "rust", "toml", "markdown" },
+          ensure_installed = { "lua", "html", "rust", "toml", "markdown", "markdown_inline" },
           sync_install = false,
           highlight = { enable = true },
-          indent = { enable = true },  
+          indent = { enable = true },
         })
       end
     },
@@ -141,9 +140,9 @@ require("lazy").setup({
 vim.cmd.colorscheme "catppuccin-mocha"
 
 -- Editor
-require('mini.statusline').setup({})
+require('lualine').setup()
 require('mini.files').setup({
-  mappings = { go_in = "<right>", go_out = "<left>", synchronize = "<enter>" }
+  mappings = { go_in = "<right>", go_out = "<left>", synchronize = "<enter>", close = "<esc>" }
 })
 
 vim.o.wrap = false
